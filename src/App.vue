@@ -1,30 +1,74 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="app">
+    <h1>Vue To-Do List</h1>
+    <input v-model="newTodoText" @keyup.enter="addTodo" placeholder="Add a new task" />
+    <ul>
+      <TodoItem
+        v-for="(todo, index) in todos"
+        :key="index"
+        :todo="todo"
+        @remove="removeTodo(index)"
+      />
+    </ul>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<script>
+import TodoItem from './components/TodoItem.vue';
+
+export default {
+  components: {
+    TodoItem,
+  },
+  data() {
+    return {
+      newTodoText: '',
+      todos: [],
+    };
+  },
+  methods: {
+    addTodo() {
+      if (this.newTodoText.trim()) {
+        this.todos.push({ text: this.newTodoText, completed: false });
+        this.newTodoText = '';
+      }
+    },
+    removeTodo(index) {
+      this.todos.splice(index, 1);
+    },
+  },
+};
+</script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  text-align: center;
+  margin-top: 60px;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+ul {
+  list-style-type: none;
+  padding: 0;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+input[type='text'] {
+  width: 80%;
+  padding: 8px;
+}
+button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #d32f2f;
 }
 </style>
